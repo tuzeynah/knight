@@ -101,6 +101,8 @@ bool __stdcall hook_wglSwapBuffers(_In_ HDC hdc)
 
 		if (Menu::Watermark) {
 			ImGui::PushFont(Menu::Font);
+			ImGui::PushStyleColor(ImGuiCol_Text, ImColor(255, 255, 255).Value);
+
 			ImGui::Text("KNIGHT");
 			ImGui::PopFont();
 
@@ -109,6 +111,7 @@ bool __stdcall hook_wglSwapBuffers(_In_ HDC hdc)
 			ImGui::PushFont(Menu::IconFont);
 			ImGui::Text("K");
 			ImGui::PopFont();
+			ImGui::PopStyleColor();
 		}
 
 		implement::visuals::esp::handle_render();
@@ -165,37 +168,16 @@ void Menu::SetupImgui()
 	Menu::IconFont = io.Fonts->AddFontFromMemoryCompressedTTF(iconfont_compressed_data, iconfont_compressed_size, 24);
 
 	ImVec4* colors = ImGui::GetStyle().Colors;
-	colors[ImGuiCol_Text] = ImVec4(1.f, 1.f, 1.f, 1.00f);
-	colors[ImGuiCol_TextDisabled] = ImVec4(0.35f, 0.35f, 0.35f, 1.00f);
 
-	colors[ImGuiCol_WindowBg] = ImColor(25, 25, 25);
-
-	colors[ImGuiCol_ChildBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-	colors[ImGuiCol_PopupBg] = ImVec4(0.08f, 0.08f, 0.08f, 0.94f);
-	colors[ImGuiCol_Border] = ImVec4(0.00f, 0.00f, 0.00f, 0.50f);
-	colors[ImGuiCol_BorderShadow] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-
-	colors[ImGuiCol_FrameBg] = ImColor(32, 32, 32);
-	colors[ImGuiCol_FrameBgHovered] = ImColor(38, 38, 38);
-	colors[ImGuiCol_FrameBgActive] = ImVec4(0.045f, 0.045f, 0.045f, 0.90f);
-
-	colors[ImGuiCol_TitleBg] = ImVec4(0.065f, 0.065f, 0.065f, 0.90f);
-	colors[ImGuiCol_TitleBgActive] = ImVec4(0.065f, 0.065f, 0.065f, 0.90f);
-	colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.065f, 0.065f, 0.065f, 0.90f);
-
-	colors[ImGuiCol_MenuBarBg] = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
-	colors[ImGuiCol_ScrollbarBg] = ImVec4(0.02f, 0.02f, 0.02f, 0.00f);
-	colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.31f, 0.31f, 0.31f, 1.00f);
-	colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.41f, 0.41f, 0.41f, 1.00f);
-	colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.51f, 0.51f, 0.51f, 1.00f);
-	colors[ImGuiCol_CheckMark] = ImVec4(0.56f, 0.10f, 0.10f, 1.00f);
+	if (Menu::light_mode) {
+		apply_light_theme(colors);
+	}
+	else {
+		apply_dark_theme(colors);
+	}
 
 	colors[ImGuiCol_SliderGrab] = ImVec4(Menu::Accent[0], Menu::Accent[1], Menu::Accent[2], Menu::Accent[3]);
 	colors[ImGuiCol_SliderGrabActive] = Menu::Darken(colors[ImGuiCol_SliderGrab], 0.4f);
-
-	colors[ImGuiCol_Button] = ImColor(36, 36, 36);
-	colors[ImGuiCol_ButtonHovered] = ImColor(42, 42, 42);
-	colors[ImGuiCol_ButtonActive] = ImVec4(0.3f, 0.3f, 0.3f, 1.00f);
 
 	colors[ImGuiCol_Header] = ImVec4(0.33f, 0.35f, 0.36f, 0.53f);
 	colors[ImGuiCol_HeaderHovered] = ImVec4(0.f, 0.44f, 0.44f, 0.67f);
@@ -230,11 +212,77 @@ void Menu::SetupImgui()
 	ImGuiStyle& style = ImGui::GetStyle();
 	style.WindowRounding = 10.0f;
 	style.WindowBorderSize = 0;
-	style.WindowPadding = ImVec2(0,0);
+	style.WindowPadding = ImVec2(0, 0);
 
 	ImGui_ImplWin32_Init(Menu::HandleWindow);
 	ImGui_ImplOpenGL2_Init();
 
 
 	Menu::Initialized = true;
+}
+
+void Menu::apply_dark_theme(ImVec4* colors) {
+	colors[ImGuiCol_Text] = ImColor(255, 255, 255);
+	colors[ImGuiCol_TextDisabled] = ImColor(89, 89, 89);
+
+	colors[ImGuiCol_WindowBg] = ImColor(25, 25, 25);
+	colors[ImGuiCol_ChildBg] = ImColor(255, 255, 255);
+	colors[ImGuiCol_PopupBg] = ImColor(20, 20, 20, 239);
+
+	colors[ImGuiCol_Border] = ImColor(0, 0, 0, 127);
+	colors[ImGuiCol_BorderShadow] = ImColor(255, 255, 255);
+
+	colors[ImGuiCol_FrameBg] = ImColor(32, 32, 32);
+	colors[ImGuiCol_FrameBgHovered] = ImColor(38, 38, 38);
+	colors[ImGuiCol_FrameBgActive] = ImColor(11, 11, 11, 229);
+
+	colors[ImGuiCol_TitleBg] = ImColor(16, 16, 16, 229);
+	colors[ImGuiCol_TitleBgActive] = ImColor(16, 16, 16, 229);
+	colors[ImGuiCol_TitleBgCollapsed] = ImColor(16, 16, 16, 229);
+
+	colors[ImGuiCol_MenuBarBg] = ImColor(0.14f, 0.14f, 0.14f, 1.00f);
+
+	colors[ImGuiCol_ScrollbarBg] = ImColor(5, 5, 5, 0);
+	colors[ImGuiCol_ScrollbarGrab] = ImColor(79, 79, 79);
+	colors[ImGuiCol_ScrollbarGrabHovered] = ImColor(104, 104, 104);
+	colors[ImGuiCol_ScrollbarGrabActive] = ImColor(130, 130, 130);
+
+	colors[ImGuiCol_CheckMark] = ImColor(142, 25, 25);
+
+	colors[ImGuiCol_Button] = ImColor(36, 36, 36);
+	colors[ImGuiCol_ButtonHovered] = ImColor(42, 42, 42);
+	colors[ImGuiCol_ButtonActive] = ImColor(76, 76, 76);
+}
+
+void Menu::apply_light_theme(ImVec4* colors) {
+	colors[ImGuiCol_Text] = ImColor(20, 20, 20);
+	colors[ImGuiCol_TextDisabled] = ImColor(140, 140, 140);
+
+	colors[ImGuiCol_WindowBg] = ImColor(245, 245, 245);
+	colors[ImGuiCol_ChildBg] = ImColor(255, 255, 255);
+	colors[ImGuiCol_PopupBg] = ImColor(250, 250, 250, 240);
+
+	colors[ImGuiCol_Border] = ImColor(180, 180, 180);
+	colors[ImGuiCol_BorderShadow] = ImColor(255, 255, 255);
+
+	colors[ImGuiCol_FrameBg] = ImColor(230, 230, 230);
+	colors[ImGuiCol_FrameBgHovered] = ImColor(220, 220, 220);
+	colors[ImGuiCol_FrameBgActive] = ImColor(200, 200, 200);
+
+	colors[ImGuiCol_TitleBg] = ImColor(235, 235, 235);
+	colors[ImGuiCol_TitleBgActive] = ImColor(225, 225, 225);
+	colors[ImGuiCol_TitleBgCollapsed] = ImColor(245, 245, 245);
+
+	colors[ImGuiCol_MenuBarBg] = ImColor(240, 240, 240);
+
+	colors[ImGuiCol_ScrollbarBg] = ImColor(250, 250, 250, 0);
+	colors[ImGuiCol_ScrollbarGrab] = ImColor(180, 180, 180);
+	colors[ImGuiCol_ScrollbarGrabHovered] = ImColor(160, 160, 160);
+	colors[ImGuiCol_ScrollbarGrabActive] = ImColor(140, 140, 140);
+
+	colors[ImGuiCol_CheckMark] = ImColor(160, 40, 40);
+
+	colors[ImGuiCol_Button] = ImColor(230, 230, 230);
+	colors[ImGuiCol_ButtonHovered] = ImColor(215, 215, 215);
+	colors[ImGuiCol_ButtonActive] = ImColor(190, 190, 190);
 }

@@ -70,6 +70,7 @@ void c_config_manager::save(size_t id) const {
 
     j["menu"] = {
         {"watermark", Menu::Watermark},
+        {"light_mode", Menu::light_mode},
         {"accent", {Menu::Accent[0], Menu::Accent[1], Menu::Accent[2], Menu::Accent[3]}}
     };
 
@@ -201,6 +202,7 @@ void c_config_manager::load(size_t id) {
 
     if (j.contains("menu")) {
         Menu::Watermark = j["menu"].value("watermark", true);
+        Menu::light_mode = j["menu"].value("light_mode", false);
 
 
         auto accentArray = j["menu"]["accent"];

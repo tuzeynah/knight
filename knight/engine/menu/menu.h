@@ -25,6 +25,7 @@ struct Menu
 	static inline bool Open;
 	static inline int Keybind;
 
+	static inline bool light_mode = false;
 	static inline bool Watermark = true;
 	static inline float Accent[4]{ 0.4f, 0.7f, 0.7f, 1.0f };
 
@@ -34,8 +35,12 @@ struct Menu
 	static inline bool Initialized;
 
 	static void SetupImgui();
+
+	static void apply_dark_theme(ImVec4* colors);
+	static void apply_light_theme(ImVec4* colors);
+
 	static void RenderMenu();
-	 
+
 	static bool Dropdown(const char* label, const char* items[], int* item_current, int items_count, ImVec2 size = ImVec2(0, 0));
 
 	static void Text(const char* text);
@@ -44,7 +49,7 @@ struct Menu
 	static void Slider(int id, const char* text, double* bruh, double min, double max, const char* format = "%.2f");
 	static void Slider(int id, const char* text, int* bruh, int min, int max, const char* format = "%d");
 
-	static void Toggle(int id, const char* text, bool* value);
+	static bool Toggle(int id, const char* text, bool* value);
 	static void ToggleWithKeybind(int id, const char* text, bool* value, int* key);
 	static void ShowOption(const char* text, bool* show);
 	static void ToggleWithKeybind(int id, const char* text, bool* value, int* key, bool* shown);
@@ -53,7 +58,7 @@ struct Menu
 
 	static ImVec4 Darken(const ImVec4& color, float factor);
 
-	static void ToggleButton(const char* format, bool* value);
+	static bool ToggleButton(const char* format, bool* value);
 
 
 	static inline HWND HandleWindow;

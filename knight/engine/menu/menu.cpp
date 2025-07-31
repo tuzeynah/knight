@@ -83,6 +83,14 @@ void Menu::RenderMenu()
 			implement::utility::fast_place::handle_menu();
 			break;
 		case 4:
+			ImGui::Separator();
+			ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 3);
+
+			if (Menu::Toggle(43453456, "light mode", &Menu::light_mode)) {
+				ImVec4* colors = ImGui::GetStyle().Colors;
+				Menu::light_mode ? apply_light_theme(colors) : apply_dark_theme(colors);
+			}
+
 			Menu::Toggle(94358345, "watermark", &Menu::Watermark);
 			if (Menu::ColorEdit("accent", Menu::Accent)) {
 
@@ -267,7 +275,7 @@ void Menu::Slider(int id, const char* text, int* value, int min, int max, const 
 	ImGui::Spacing();
 }
 
-void Menu::Toggle(int id, const char* text, bool* value) {
+bool Menu::Toggle(int id, const char* text, bool* value) {
 	ImVec2 textSize = Menu::Font->CalcTextSizeA(Menu::Font->FontSize, FLT_MAX, 0.0f, text);
 
 	ImGui::SetCursorPos(ImVec2(20.f, ImGui::GetCursorPosY() + 5.f));
@@ -283,6 +291,8 @@ void Menu::Toggle(int id, const char* text, bool* value) {
 	ImGui::PopID();
 
 	ImGui::Spacing();
+
+	return value;
 }
 
 void Menu::ToggleWithKeybind(int id, const char* text, bool* value, int* key) {
@@ -297,13 +307,13 @@ void Menu::ToggleWithKeybind(int id, const char* text, bool* value, int* key) {
 	ImGui::SameLine();
 
 	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 1.3f);
-	ImGui::SetCursorPosX(cursor_x + 120.0f);
+	ImGui::SetCursorPosX(cursor_x + 138.0f);
 
 	ImGui::Hotkey("##bind", key, { 100.f, 25.f });
 	ImGui::SameLine();
 
 	ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 1.1f);
-	ImGui::SetCursorPosX(cursor_x + 348.0f);
+	ImGui::SetCursorPosX(cursor_x + 349.0f);
 
 	Menu::ToggleButton(text, value);
 	ImGui::PopID();
@@ -320,7 +330,7 @@ void Menu::ShowOption(const char* text, bool* show) {
 	ImGui::SameLine();
 
 	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 1.5f);
-	ImGui::SetCursorPosX(cursor_x + 525.0f);
+	ImGui::SetCursorPosX(cursor_x + 544.0f);
 
 	if (ImGui::AdaptedButton(*show ? "-" : "+", { 25.f, 25.f }))
 	{
@@ -329,6 +339,7 @@ void Menu::ShowOption(const char* text, bool* show) {
 
 	ImGui::Spacing();
 }
+
 void Menu::ToggleWithKeybind(int id, const char* text, bool* value, int* key, bool* show) {
 	ImGui::SetCursorPos(ImVec2(20.0f, ImGui::GetCursorPosY() + 5));
 
@@ -341,19 +352,19 @@ void Menu::ToggleWithKeybind(int id, const char* text, bool* value, int* key, bo
 	ImGui::SameLine();
 
 	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 1.3f);
-	ImGui::SetCursorPosX(cursor_x + 120.0f);
+	ImGui::SetCursorPosX(cursor_x + 138.0f);
 
 	ImGui::Hotkey("##bind", key, { 100.f, 25.f });
 	ImGui::SameLine();
 
 	ImGui::SetCursorPosY(ImGui::GetCursorPosY() - 1.1f);
-	ImGui::SetCursorPosX(cursor_x + 348.0f);
+	ImGui::SetCursorPosX(cursor_x + 349.0f);
 
 	Menu::ToggleButton(text, value);
 	ImGui::SameLine();
 
 	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 1.5f);
-	ImGui::SetCursorPosX(cursor_x + 525.0f);
+	ImGui::SetCursorPosX(cursor_x + 544.0f);
 
 	if (ImGui::AdaptedButton(*show ? "-" : "+", { 25.f, 25.f }))
 	{
@@ -395,7 +406,7 @@ ImVec4 Menu::Darken(const ImVec4& color, float factor) {
 src: unknowncheats.me
 old asf but still works pretty well
 */
-void Menu::ToggleButton(const char* format, bool* value)
+bool Menu::ToggleButton(const char* format, bool* value)
 {
 	ImVec2 p = ImGui::GetCursorScreenPos();
 	ImDrawList* draw_list = ImGui::GetWindowDrawList();
@@ -424,5 +435,7 @@ void Menu::ToggleButton(const char* format, bool* value)
 
 	draw_list->AddRectFilled(ImVec2(p.x + offsetX, p.y + offsetY), ImVec2(p.x + width + offsetX, p.y + height + offsetY), col_bg, height * 0.5f);
 	draw_list->AddCircleFilled(ImVec2(*value ? (p.x + width - radius + offsetX) : (p.x + radius + offsetX), p.y + radius + offsetY), radius - 1.5f, col_circle);
+
+	return *value;
 }
 
